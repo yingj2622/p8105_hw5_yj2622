@@ -105,3 +105,23 @@ exp_df = tibble(
   )
 ```
 
+Then make a spaghetti plot showing observations on each subject over time
+
+```{r}
+exp_df %>% 
+  ggplot(aes(x = week, y = observation, color = id, group = id)) +
+  geom_point(size = 1) +
+  geom_line() +
+  facet_grid(.~arm) +
+  labs(
+    title = "Observations over Eight Weeks"
+  )
+```
+
+From the plot we can see that:
+
+* Overall, the observation levels are higher in experimental arm than control arm;
+
+* The observations at certain time in experimental arm is more disperse than control arm;
+
+* The observation levels in experimental group increased over time while that in control groups basically stayed constant.
