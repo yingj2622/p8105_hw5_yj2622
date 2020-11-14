@@ -81,3 +81,27 @@ results_df %>%
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
 ```
 
+##Problem 2
+
+```{r}
+exp_df = tibble(
+  name = list.files("./data")
+) %>% 
+  mutate(
+    path = str_c("./data",name, sep = "/"),
+    data = map(.x = path, ~read_csv(.x))
+  ) %>% 
+  unnest(data) %>% 
+  mutate(
+   name = gsub( ".csv","", name)
+  ) %>% 
+  separate(name, into = c("arm","id"), sep = "_",remove = TRUE) %>% 
+  select(-path) %>% 
+  pivot_longer(
+    week_1:week_8,
+    names_to = "week",
+    names_prefix = "week_",
+    values_to = "observation"
+  )
+```
+
