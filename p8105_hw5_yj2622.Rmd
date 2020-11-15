@@ -125,3 +125,37 @@ From the plot we can see that:
 * The observations at certain time in experimental arm is more disperse than control arm;
 
 * The observation levels in experimental group increased over time while that in control groups basically stayed constant.
+
+## Problem 3
+
+The function to get mu_hat and p_value from t.test for a sample from N(mean = 0,sd = 5)
+
+```{r}
+set.seed(5)
+
+sim_mean_p = function(n, mean = 0, sigma = 5){
+  sim_data = tibble(
+    sample = rnorm(n, mean = mean, sd = sigma)
+  )
+  
+  sim_data %>% 
+    mutate(
+      p_value = t.test(sample) %>% broom::tidy() %>% pull(p.value)
+    ) %>% 
+    summarise(
+      mu_hat = mean(sample),
+      p_value = mean(p_value)
+    ) 
+  
+}
+
+```
+
+iterate this function for 5000 times
+
+```{r}
+ sim_results = 
+  rerun(5000, sim_mean_p(30)) %>% 
+  bind_rows()
+```
+
