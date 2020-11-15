@@ -699,17 +699,18 @@ homicide_df %&gt;%
 </div>
 <div id="problem-3" class="section level2">
 <h2>Problem 3</h2>
-<p>The function to get mu_hat and p_value from t.test for a sample from N(mean = 0,sd = 5)</p>
+<p>The function to get mu_hat and p_value from t.test for a sample from N(mean ,sd = 5)</p>
 <pre class="r"><code>set.seed(5)
 
-sim_mean_p = function(n, mean = 0, sigma = 5){
+sim_mean_p = function(samp_size = 30, mean, sigma = 5)
+{
   sim_data = tibble(
-    sample = rnorm(n, mean = mean, sd = sigma)
+    sample = rnorm(n = samp_size, mean = mean, sd = sigma)
   )
   
   sim_data %&gt;% 
     mutate(
-      p_value = t.test(sample) %&gt;% broom::tidy() %&gt;% pull(p.value)
+      p_value = t.test(sample, mu = mean) %&gt;% broom::tidy() %&gt;%         pull(p.value)
     ) %&gt;% 
     summarise(
       mu_hat = mean(sample),
@@ -717,10 +718,33 @@ sim_mean_p = function(n, mean = 0, sigma = 5){
     ) 
   
 }</code></pre>
-<p>iterate this function for 5000 times</p>
-<pre class="r"><code> sim_results = 
-  rerun(5000, sim_mean_p(30)) %&gt;% 
+<p>Set μ as 0 and iterate this function for 5000 times</p>
+<pre class="r"><code> sim_results_zero = 
+  rerun(5000, sim_mean_p(mean = 0)) %&gt;% 
   bind_rows()</code></pre>
+<p>Repeat the above for μ={1,2,3,4,5,6}</p>
+<pre class="r"><code>sim_results = 
+  tibble(mu = c(1,2,3,4,5,6)) %&gt;% 
+  mutate(
+    estimate_dfs = map(.x = mu, ~rerun(5000, sim_mean_p(mean = .x)))
+    ) %&gt;% 
+  unnest(estimate_dfs) %&gt;% 
+  unnest(estimate_dfs)</code></pre>
+<p>add an indicator of whether the null was rejected and count the number of times the null was rejected</p>
+<pre class="r"><code>aggregate_tb = 
+  sim_results %&gt;% 
+  mutate(
+    conclusion = case_when(
+      p_value &lt;= 0.05 ~ &quot;rejected&quot;,
+      p_value &gt; 0.05 ~ &quot;fail to reject&quot;
+    )
+  ) %&gt;% 
+  group_by(mu) %&gt;% 
+  summarise(
+    total_n = n(),
+    rejected_n = sum(conclusion == &quot;rejected&quot;)
+  )</code></pre>
+<pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
 </div>
 
 
