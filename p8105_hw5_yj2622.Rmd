@@ -83,6 +83,8 @@ results_df %>%
 
 ## Problem 2
 
+Read in and tidy the dataset
+
 ```{r, message = FALSE}
 exp_df = tibble(
   name = list.files("./data")
@@ -254,13 +256,12 @@ sim_results %>%
     title = "Average Estimate of Mu_hat over Different Mu",
     caption = "Only include samples for which the null was rejected",
     y = "average estimate of mu_hat"
-  )
+  ) +
+  scale_y_continuous(limits = c(1,6.1,2))
 ```
  
-  Is the sample average of μ^ across tests for which the null is rejected approximately equal to the true value of μ? Why or why not?
-  
 According to these two plots, we can find that:
 
 * The sample average of μ_hat in all samples are approximately equal to true μ;
 
-* While the sample average of μ_hat across tests for which the null is rejected doesn't approximately equal to the true μ.
+* While the sample average of μ_hat across tests for which the null is rejected doesn't all approximately equal to the true μ. As the true μ increases, the sample average of μ_hat get more closer to the true one. While for samples with lower true μ, the average of μ_hat is larger than the true one. I think that's because as the true μ increases, the statistics power increase so it's easier to reject the null. While for samples with lower true μ, the null is rejected only when the μ_hat is larger than the true μ.
