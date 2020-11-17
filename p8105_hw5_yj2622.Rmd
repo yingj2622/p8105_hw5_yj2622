@@ -264,4 +264,8 @@ According to these two plots, we can find that:
 
 * The sample average of μ_hat in all samples are approximately equal to true μ;
 
-* While the sample average of μ_hat across tests for which the null is rejected doesn't all approximately equal to the true μ. As the true μ increases, the sample average of μ_hat get more closer to the true one. While for samples with lower true μ, the average of μ_hat is larger than the true one. I think that's because as the true μ increases, the statistics power increase so it's easier to reject the null. While for samples with lower true μ, the null is rejected only when the μ_hat is larger than the true μ.
+* While the sample average of μ_hat across tests for which the null is rejected doesn't all approximately equal to the true μ. 
+  
+  * As the true μ increases, the sample average of μ_hat get more closer to the true    one. While for samples with lower true μ, the average of μ_hat is larger than the true one. 
+  
+  * I think that's because as the true μ increases, the statistics power increase so it's easier to reject the null. While for samples with lower true μ, the null is rejected only when the μ_hat is more larger than the true μ.
